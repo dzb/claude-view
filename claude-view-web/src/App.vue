@@ -173,6 +173,18 @@ function isActive(path: string) {
 .badge-warning { background: #fef3d0; color: #8a6300; }
 .badge-info { background: var(--primary-light); color: var(--primary); }
 
+.memory-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #8b7e6a;
+  background: #faf7f2;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #e8e0d4;
+}
+
 .page-title {
   font-size: 22px;
   font-weight: 700;

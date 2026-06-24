@@ -60,6 +60,7 @@ function formatTime(ts: number) {
         </div>
         <div class="card" style="flex:1; text-align:center;">
           <div style="font-size:28px; font-weight:700;">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px;margin-right:4px;"><path d="M3 2h7a2 2 0 012 2v8a2 2 0 01-2 2H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="#8b7e6a" stroke-width="1.5"/><path d="M5 5h3M5 8h4M5 11h2" stroke="#8b7e6a" stroke-width="1.5" stroke-linecap="round"/></svg>
             {{ projects.filter(p => p.hasMemory).length }}
           </div>
           <div style="color:var(--text-muted); font-size:13px;">With Memory</div>
@@ -78,7 +79,10 @@ function formatTime(ts: number) {
           </div>
         </div>
         <div style="display:flex; gap:8px;">
-          <span v-if="p.hasMemory" class="badge badge-info">memory</span>
+          <span v-if="p.hasMemory" class="memory-tag">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px;"><path d="M3 2h7a2 2 0 012 2v8a2 2 0 01-2 2H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h3M5 8h4M5 11h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            memory
+          </span>
           <button class="btn" @click="openMemories(p)">Memories</button>
           <button class="btn btn-primary" @click="openConversations(p)">View</button>
         </div>
