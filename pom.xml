@@ -16,13 +16,6 @@
         <module>claude-view</module>
     </modules>
 
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/dzb/claude-view</url>
-        </repository>
-    </distributionManagement>
-
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
