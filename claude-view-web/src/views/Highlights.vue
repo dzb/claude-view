@@ -105,7 +105,7 @@ function preview(text: string, len = 120): string {
               <div style="font-size:13px; white-space:pre-wrap;">{{ d.content }}</div>
             </div>
             <!-- Assistant -->
-            <div v-else-if="d.role === 'assistant'" style="padding:8px 12px; border-radius:6px; background:#fafafa; border:1px solid #eee;">
+            <div v-else-if="d.role === 'assistant'" style="padding:8px 12px; border-radius:6px; background:var(--assistant-bg); border:1px solid var(--assistant-border);">
               <div style="font-size:10px; color:var(--text-muted); margin-bottom:2px;">
                 🤖 {{ d.model || 'Claude' }}
               </div>

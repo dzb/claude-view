@@ -1,8 +1,32 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
+
+const theme = ref<'light' | 'dark'>('light')
+
+function applyTheme(t: 'light' | 'dark') {
+  document.documentElement.setAttribute('data-theme', t)
+  theme.value = t
+}
+
+function toggleTheme() {
+  const next = theme.value === 'dark' ? 'light' : 'dark'
+  applyTheme(next)
+  try { localStorage.setItem('claude-view-theme', next) } catch {}
+}
+
+onMounted(() => {
+  let saved: string | null = null
+  try { saved = localStorage.getItem('claude-view-theme') } catch {}
+  if (saved === 'dark' || saved === 'light') {
+    applyTheme(saved)
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    applyTheme('dark')
+  }
+})
 
 function isActive(path: string) {
   return route.path.startsWith(path)
@@ -39,6 +63,19 @@ function isActive(path: string) {
         </span>
         History
       </router-link>
+
+      <div class="sidebar-spacer"></div>
+
+      <button class="theme-toggle" @click="toggleTheme" :title="theme === 'dark' ? 'Switch to light' : 'Switch to dark'">
+        <svg v-if="theme === 'dark'" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.9 11.9l1.06 1.06M3.05 12.95l1.06-1.06M11.9 4.1l1.06-1.06" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M5.5 1.5a7 7 0 005 12.8A5.5 5.5 0 015.5 1.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        <span>{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
+      </button>
     </nav>
     <main class="content">
       <router-view />
@@ -62,6 +99,57 @@ function isActive(path: string) {
   --primary-light: #eef0ff;
   --success: #20c997;
   --warning: #f6c343;
+
+  /* Semantic colors for views */
+  --thinking-bg: #fdf6e3;
+  --assistant-bg: #fafafa;
+  --assistant-border: #eee;
+  --input-bg: #ffffff;
+  --input-border: var(--border);
+  --pre-bg: #f5f5f5;
+  --markdown-text: #24292e;
+  --markdown-code-bg: #f0f0f0;
+  --markdown-pre-bg: #f6f8fa;
+  --markdown-table-stripe: #f8f9fa;
+  --markdown-table-hover: #eef1f5;
+  --markdown-blockquote-bg: #f8f9fa;
+  --markdown-blockquote-text: #57606a;
+
+  color-scheme: light;
+}
+
+/* ---- Dark Mode ---- */
+[data-theme="dark"] {
+  --bg: #1a1b1e;
+  --card-bg: #25262b;
+  --border: #373a40;
+  --text: #c1c2c5;
+  --text-muted: #909296;
+  --primary: #7b93ff;
+  --primary-light: #1f2538;
+  --success: #38d9a9;
+  --warning: #f6c343;
+
+  --thinking-bg: #2d2415;
+  --assistant-bg: #1e1f23;
+  --assistant-border: #373a40;
+  --input-bg: #1a1b1e;
+  --input-border: #373a40;
+  --pre-bg: #1e1f23;
+  --markdown-text: #c1c2c5;
+  --markdown-code-bg: #2d2e32;
+  --markdown-pre-bg: #1e1f23;
+  --markdown-table-stripe: #2a2b2f;
+  --markdown-table-hover: #323338;
+  --markdown-blockquote-bg: #1e1f23;
+  --markdown-blockquote-text: #909296;
+
+  color-scheme: dark;
+}
+
+/* Prevent white flash — apply bg to html/body */
+html, body {
+  background: var(--bg);
 }
 
 .app {
@@ -126,6 +214,30 @@ function isActive(path: string) {
   background: rgba(249, 115, 22, 0.1);
   border-left-color: var(--sidebar-accent);
   font-weight: 600;
+}
+
+.sidebar-spacer {
+  flex: 1;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 12px 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  color: var(--sidebar-text);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.theme-toggle:hover {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--sidebar-accent);
+  border-color: rgba(249, 115, 22, 0.2);
 }
 
 .content {
@@ -206,7 +318,7 @@ function isActive(path: string) {
 }
 
 pre {
-  background: #f5f5f5;
+  background: var(--pre-bg);
   padding: 12px;
   border-radius: 6px;
   overflow-x: auto;
@@ -218,7 +330,7 @@ pre {
 .markdown-body {
   font-size: 14px;
   line-height: 1.7;
-  color: #24292e;
+  color: var(--markdown-text);
 }
 .markdown-body h1, .markdown-body h2, .markdown-body h3,
 .markdown-body h4, .markdown-body h5, .markdown-body h6 {
@@ -227,26 +339,26 @@ pre {
   font-weight: 600;
   line-height: 1.4;
 }
-.markdown-body h1 { font-size: 1.4em; border-bottom: 1px solid #e9ecef; padding-bottom: 6px; }
-.markdown-body h2 { font-size: 1.25em; border-bottom: 1px solid #e9ecef; padding-bottom: 5px; }
+.markdown-body h1 { font-size: 1.4em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.markdown-body h2 { font-size: 1.25em; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
 .markdown-body h3 { font-size: 1.1em; }
 .markdown-body p { margin-bottom: 10px; }
 .markdown-body a { color: var(--primary); text-decoration: none; }
 .markdown-body a:hover { text-decoration: underline; }
 .markdown-body code {
-  background: #f0f0f0;
+  background: var(--markdown-code-bg);
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 12.5px;
   font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
 }
 .markdown-body pre {
-  background: #f6f8fa;
+  background: var(--markdown-pre-bg);
   padding: 14px;
   border-radius: 6px;
   overflow-x: auto;
   margin-bottom: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border);
 }
 .markdown-body pre code {
   background: none;
@@ -258,9 +370,9 @@ pre {
 .markdown-body blockquote {
   border-left: 3px solid var(--primary);
   padding: 6px 14px;
-  color: #57606a;
+  color: var(--markdown-blockquote-text);
   margin: 10px 0;
-  background: #f8f9fa;
+  background: var(--markdown-blockquote-bg);
   border-radius: 0 4px 4px 0;
 }
 .markdown-body table {
@@ -277,16 +389,16 @@ pre {
 .markdown-body table th,
 .markdown-body table td {
   padding: 8px 13px;
-  border: 1px solid #d0d7de;
+  border: 1px solid var(--border);
   text-align: left;
   font-size: 13px;
 }
-.markdown-body table th { font-weight: 600; background: #f6f8fa; }
-.markdown-body table tr:nth-child(even) { background: #f8f9fa; }
-.markdown-body table tr:hover { background: #eef1f5; }
+.markdown-body table th { font-weight: 600; background: var(--markdown-pre-bg); }
+.markdown-body table tr:nth-child(even) { background: var(--markdown-table-stripe); }
+.markdown-body table tr:hover { background: var(--markdown-table-hover); }
 .markdown-body strong { font-weight: 600; }
 .markdown-body img { max-width: 100%; border-radius: 4px; }
-.markdown-body hr { border: none; border-top: 1px solid #e9ecef; margin: 16px 0; }
+.markdown-body hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 .markdown-body input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -344,4 +456,52 @@ pre {
 }
 .markdown-body .sym-cross::before { transform: translate(-50%, -50%) rotate(45deg); }
 .markdown-body .sym-cross::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* ---- Highlight.js dark overrides ---- */
+[data-theme="dark"] .hljs {
+  color: #c9d1d9;
+  background: var(--markdown-pre-bg);
+}
+[data-theme="dark"] .hljs-comment,
+[data-theme="dark"] .hljs-quote { color: #8b949e; }
+[data-theme="dark"] .hljs-keyword,
+[data-theme="dark"] .hljs-selector-tag { color: #ff7b72; }
+[data-theme="dark"] .hljs-string,
+[data-theme="dark"] .hljs-addition { color: #a5d6ff; }
+[data-theme="dark"] .hljs-title,
+[data-theme="dark"] .hljs-section { color: #d2a8ff; }
+[data-theme="dark"] .hljs-type,
+[data-theme="dark"] .hljs-built_in { color: #ffa657; }
+[data-theme="dark"] .hljs-number,
+[data-theme="dark"] .hljs-literal { color: #79c0ff; }
+[data-theme="dark"] .hljs-attr,
+[data-theme="dark"] .hljs-attribute { color: #79c0ff; }
+[data-theme="dark"] .hljs-meta { color: #8b949e; }
+[data-theme="dark"] .hljs-template-variable,
+[data-theme="dark"] .hljs-variable { color: #ffa657; }
+[data-theme="dark"] .hljs-regexp { color: #a5d6ff; }
+[data-theme="dark"] .hljs-symbol { color: #a5d6ff; }
+[data-theme="dark"] .hljs-bullet { color: #ff7b72; }
+[data-theme="dark"] .hljs-emphasis { font-style: italic; }
+[data-theme="dark"] .hljs-strong { font-weight: 600; }
+
+/* ---- UI element dark overrides ---- */
+[data-theme="dark"] .memory-tag {
+  background: #2d2a22;
+  border-color: #4a4434;
+  color: #a89870;
+}
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+}
+[data-theme="dark"] .empty {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .loading {
+  color: var(--text-muted);
+}
 </style>

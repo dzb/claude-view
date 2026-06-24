@@ -169,7 +169,7 @@ const hasPrev = computed(() => offset.value > 0)
               {{ showThinking[line.uuid || line.lineNumber] ? '🧠 Hide' : '🧠 Show' }} Thinking
             </button>
             <div v-if="showThinking[line.uuid || line.lineNumber]"
-              style="margin-top:8px; padding:10px; background:#fdf6e3; border-radius:6px; font-size:12px; white-space:pre-wrap; max-height:300px; overflow-y:auto;">
+              style="margin-top:8px; padding:10px; background:var(--thinking-bg); border-radius:6px; font-size:12px; white-space:pre-wrap; max-height:300px; overflow-y:auto;">
               {{ line.thinking }}
             </div>
           </div>
