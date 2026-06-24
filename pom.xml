@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jujin8.claudeview</groupId>
+    <artifactId>claude-view-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Claude View</name>
+    <description>A desktop web app for viewing Claude Code memories and conversation history</description>
+
+    <modules>
+        <module>claude-view-server</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <freeway.version>1.2.1</freeway.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.jujin8.freeway</groupId>
+                <artifactId>freeway-boot</artifactId>
+                <version>${freeway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jujin8.freeway</groupId>
+                <artifactId>freeway-http</artifactId>
+                <version>${freeway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jujin8.freeway</groupId>
+                <artifactId>freeway-commons</artifactId>
+                <version>${freeway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jujin8.freeway</groupId>
+                <artifactId>freeway-ioc</artifactId>
+                <version>${freeway.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>25</source>
+                    <target>25</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
