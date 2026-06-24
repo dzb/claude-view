@@ -4,6 +4,9 @@ A desktop web app for browsing Claude Code conversation history and memory files
 
 ![Stack](https://img.shields.io/badge/Java-25%2B-orange) ![Stack](https://img.shields.io/badge/Freeway-1.2.1-blue) ![Stack](https://img.shields.io/badge/Vue-3.5-green)
 
+<img width="1580" height="1080" alt="image" src="https://github.com/user-attachments/assets/771f1942-5e19-4407-9be9-497b9339589f" />
+
+
 ## What it does
 
 - **Browse conversations** — read Claude Code JSONL transcripts with markdown rendering, syntax highlighting, and noise filtering
