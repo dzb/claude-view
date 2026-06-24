@@ -94,6 +94,45 @@ public class ClaudeDataServiceImpl implements ClaudeDataService {
 
     @Override
     public String unsanitizeProjectPath(String dirName) {
+        // Windows: "C--Users-Z13-workspace" → "C:\Users\Z13\workspace"
+        // (Claude Code encodes ':' and '\' both as '-')
+        if (dirName.length() >= 3
+            && Character.isLetter(dirName.charAt(0))
+            && dirName.charAt(1) == '-'
+            && dirName.charAt(2) == '-') {
+            return unsanitizeWindowsPath(dirName);
+        }
+
+        // Unix: "-home-bob-project" → "/home/bob/project"
+        // (leading '/' → '-', path separators '/' → '-')
+        return unsanitizeUnixPath(dirName);
+    }
+
+    private String unsanitizeWindowsPath(String dirName) {
+        // "C--Users-Z13-workspace" → strip "C-", remainder = "-Users-Z13-workspace"
+        String drive = dirName.substring(0, 1);
+        String remainder = dirName.substring(2); // "-Users-Z13-workspace"
+        String candidate = drive + ":" + remainder.replace('-', '\\');
+
+        if (java.nio.file.Files.isDirectory(java.nio.file.Path.of(candidate))) {
+            return candidate;
+        }
+
+        // Handle embedded dashes in path segments (e.g. "C--Users-Z13-freeway-2").
+        // Walk back from the end, replacing '\' back to '-' until the path exists.
+        int lastSlash = candidate.lastIndexOf('\\');
+        while (lastSlash > 2) { // after "C:\"
+            candidate = candidate.substring(0, lastSlash) + "-" + candidate.substring(lastSlash + 1);
+            if (java.nio.file.Files.isDirectory(java.nio.file.Path.of(candidate))) {
+                return candidate;
+            }
+            lastSlash = candidate.lastIndexOf('\\');
+        }
+
+        return drive + ":" + remainder.replace('-', '\\');
+    }
+
+    private String unsanitizeUnixPath(String dirName) {
         // Claude Code encodes paths by replacing '/' with '-'.
         // First char is always '-' (the leading '/'). Reverse this.
         // Path segments may themselves contain '-' (e.g. "freeway-2").
