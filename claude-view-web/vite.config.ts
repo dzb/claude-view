@@ -19,7 +19,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../claude-view-server/src/main/resources/web',
+    outDir: '../claude-view/src/main/resources/web',
     emptyOutDir: true,
   },
 })

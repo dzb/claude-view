@@ -11,8 +11,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>claude-view-server</artifactId>
-    <name>Claude View :: Server</name>
+    <artifactId>claude-view</artifactId>
+    <name>Claude View</name>
 
     <dependencies>
         <dependency>

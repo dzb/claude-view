@@ -29,7 +29,7 @@ Zero database, zero ORM, zero external runtime dependencies beyond SLF4J.
 ```bash
 # Build and run (single JAR, ~860KB)
 mvn clean package -DskipTests
-java -jar claude-view-server/target/claude-view-server-1.0.jar
+java -jar claude-view/target/claude-view-1.0.jar
 ```
 
 The server picks a random available port and prints the URL:
@@ -41,7 +41,7 @@ The server picks a random available port and prints the URL:
 To specify a port:
 
 ```bash
-java -jar claude-view-server.jar --freeway.web.server.port=8080
+java -jar claude-view-1.0.jar --freeway.web.server.port=8080
 ```
 
 ## Development
@@ -59,7 +59,7 @@ cd claude-view-web && npm run dev
 
 ```
 claude-view/
-├── claude-view-server/       # Java backend
+├── claude-view/              # Java backend
 │   └── src/main/java/com/jujin/claudeview/
 │       ├── App.java          # Entry point + all routes
 │       ├── model/            # 6 data records
