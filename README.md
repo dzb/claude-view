@@ -20,7 +20,7 @@ A desktop web app for browsing Claude Code conversation history and memory files
 
 | Layer | Tech |
 |-------|------|
-| Backend | Java 25 + [Freeway](https://github.com/dzb/freeway) 1.2.1 |
+| Backend | Java 25 + [Freeway](https://github.com/dzb/freeway) 1.2 |
 | Frontend | Vue 3 + TypeScript + Vite |
 | Markdown | marked + highlight.js (GitHub theme) |
 | Data | File system reads from `~/.claude/` |
